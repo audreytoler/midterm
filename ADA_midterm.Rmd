@@ -4,27 +4,53 @@ author: "audrey toler"
 date: "10/19/2021"
 output: html_document
 ---
+# These are codes for midterm problems 3 and 4
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r}
+# 3
+
+# open tidyverse
+library(tidyverse)
+
+# import data
+BRFSS.mid <- read_csv("https://raw.githubusercontent.com/kijohnson/ADA-Fall-2021/master/BRFSS2017_10percent_v.csv") %>% na.omit()
+
+# check class of SEX, convert to character
+class(BRFSS.mid$SEX)
+BRFSS.mid$SEX<-factor(BRFSS.mid$SEX, 
+                      levels = c(1, 2), 
+                      labels = c("Male", "Female"))
+
+# make subset of male data
+males<-BRFSS.mid[which(BRFSS.mid$SEX=='Male'),] 
+table(BRFSS.mid$SEX)
+
+# calculate median height for males
+median(males$ht_meters, na.rm=TRUE) 
+
+# make subset of female data
+females<-BRFSS.mid[which(BRFSS.mid$SEX=='Female'),] 
+table(BRFSS.mid$SEX)
+
+# calculate median height for males
+median(females$ht_meters, na.rm=TRUE) 
+
+# plot median differences in height by sex
+ggplot(data = BRFSS.mid, aes(x = SEX, y = ht_meters)) +
+  geom_violin() +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.3, color = "deeppink") +
+  labs(x = "Sex", y = "Height (m)",  title = "Boxplot, Violin plot, and Scatter plot of height by sex")
+
 ```
 
-## R Markdown
+```{r}
+# 4
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+# find mean height of males
+mean(males$ht_meters, na.rm = TRUE)
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+# find mean height of females
+mean(females$ht_meters, na.rm = TRUE)
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
